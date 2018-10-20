@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "mocha",
-    "build": "npm test && npm start"
+    "build": "npm install && npm audit fix && npm test && npm start"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
