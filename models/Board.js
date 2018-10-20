@@ -1,9 +1,19 @@
 const BOARD_LENGTH = 9;//myst be multiple of box_size
 const BOX_SIZE = 3;
+/**
+ * Number of times that the base board will be shuffled.
+ * This number does not need to be so high because there are only 36 possibilities for swapping the numbers, so
+ * when all numbers are replaced by each others we would have less mixed values than if we do it few times.
+ * @type {number}
+ */
+const SHUFFLE_TIMES = 15;
 
 class Board {
   constructor() {
     this.map = Board._generateBase();
+    for (let i = 0; i < SHUFFLE_TIMES; i++) {
+      this._shuffle();
+    }
   }
 
   getBox(col, line) {
@@ -21,6 +31,12 @@ class Board {
 
   getColumn(y) {
     return arrayColumn(this.map, y)
+  }
+
+  toJson() {
+    let map = [];
+    this.map.map(line => map = map.concat(line));
+    return JSON.stringify(map)
   }
 
   _shuffle() {

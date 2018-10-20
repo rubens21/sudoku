@@ -2,7 +2,7 @@
  * These tests are only compatible with 9x9 Sudoku boards
  */
 const assert = require('assert');
-const Board = require('../models/Board.js');
+const Board = require('../models/Board');
 
 const mapExample = [
   [1, 1, 1, 2, 2, 2, 3, 3, 3],
