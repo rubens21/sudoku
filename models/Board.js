@@ -6,12 +6,12 @@ class Board {
     this.map = Board._generateBase();
   }
 
-  getBox(x, y) {
+  getBox(col, line) {
     let box = [];
-    let col = x * BOX_SIZE;
-    box[0] = this.map.slice(y * BOX_SIZE)[0].slice(col, col + BOX_SIZE);
-    box[1] = this.map.slice(y * BOX_SIZE)[1].slice(col, col + BOX_SIZE);
-    box[2] = this.map.slice(y * BOX_SIZE)[2].slice(col, col + BOX_SIZE);
+    let x = col * BOX_SIZE;
+    box[0] = this.map.slice(line * BOX_SIZE)[0].slice(x, x + BOX_SIZE);
+    box[1] = this.map.slice(line * BOX_SIZE)[1].slice(x, x + BOX_SIZE);
+    box[2] = this.map.slice(line * BOX_SIZE)[2].slice(x, x + BOX_SIZE);
     return box;
   }
 
@@ -23,9 +23,56 @@ class Board {
     return arrayColumn(this.map, y)
   }
 
+  _shuffle() {
+    this._swapLineCols();
+    this._swapNumber();
+  }
+  _swapNumber() {
+    const numberA = Math.floor(Math.random() * BOARD_LENGTH) + 1;
+    let numberB;
+    do {
+      numberB = Math.floor(Math.random() * BOARD_LENGTH) + 1
+    } while (numberB === numberA) ;
+    // console.debug(`Swapping ${numberA}s by ${numberB}s`);
+    for (let i = 0; i < BOARD_LENGTH; i++) {
+      for (let j = 0; j < BOARD_LENGTH; j++) {
+        if (this.map[i][j] === numberA) {
+          this.map[i][j] = numberB;
+        } else if (this.map[i][j] === numberB) {
+          this.map[i][j] = numberA;
+        }
+      }
+    }
+  }
+  _swapLineCols() {
+    const coordA = Math.floor(Math.random() * 3);
+    let coordB;
+    do  {
+      coordB = Math.floor(Math.random() * 3);
+    }while (coordB === coordA);
+
+    // box number
+    const blockOrStack = Math.floor(Math.random() * 3);
+    const finalCoordA = coordA + (blockOrStack * BOX_SIZE);
+    const finalCoordB = coordB + (blockOrStack * BOX_SIZE);
+    // console.debug(`Flipping cols ${finalCoordA} and ${finalCoordB}`);
+    //flip cols
+    this.map.forEach((line, index) => {
+      let aux = this.map[index][finalCoordA];
+      this.map[index][finalCoordA] = this.map[index][finalCoordB];
+      this.map[index][finalCoordB] = aux;
+    });
+    //flip lines
+    // console.debug(`Flipping lines ${finalCoordA} and ${finalCoordB}`);
+    let aux = this.map[finalCoordA];
+    this.map[finalCoordA] = this.map[finalCoordB];
+    this.map[finalCoordB] = aux;
+  }
+
+
   static _generateBase() {
     // firs number of the cell
-    let baseNumber = Math.floor(Math.random() * 10);
+    let baseNumber = Math.floor(Math.random() * (BOARD_LENGTH + 1));
     let boardMap = [];
 
     for (let line = 0; line < BOARD_LENGTH; line += BOX_SIZE) {

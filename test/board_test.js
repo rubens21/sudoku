@@ -140,4 +140,18 @@ describe('Board:', function () {
       assert.ok(errors.length > 0);
     });
   });
+  describe('shuffle', function () {
+    it('should keep the board valid', function () {
+
+      const mapTest = new Board();
+      for (let i = 0; i < 10; i++) {
+        const initialMap = JSON.stringify(mapTest.map);
+        mapTest._shuffle();
+        const errors = mapTest.validateMap();
+        assert.ok(errors.length === 0);
+        assert.ok(JSON.stringify(mapTest.map) !== initialMap, "The map should be different after be shuffled");
+      }
+    });
+  })
+
 });
