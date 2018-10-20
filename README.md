@@ -19,3 +19,16 @@ Download the project (or clone it), and run the build command in the project dir
 ```bash
 $ npm run build
 ```
+### Running
+
+If you want to run the application skipping the test and build steps, use the command:
+
+```bash
+$ npm start
+```
+
+## Usage
+
+```bash
+$ curl http://localhost:8080/sudoku/board
+```
