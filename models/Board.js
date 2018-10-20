@@ -1,5 +1,16 @@
-const BOARD_LENGTH = 9;//myst be multiple of box_size
+/**
+ * Number of elements in each line/column
+ *
+ * @type {number}
+ */
+const BOARD_LENGTH = 9;
+
+/**
+ * Number of elements in each box. This value must be the square root of the board length
+ * @type {number}
+ */
 const BOX_SIZE = 3;
+
 /**
  * Number of times that the base board will be shuffled.
  * This number does not need to be so high because there are only 36 possibilities for swapping the numbers, so
@@ -8,7 +19,15 @@ const BOX_SIZE = 3;
  */
 const SHUFFLE_TIMES = 15;
 
+/**
+ * Object that represents the Sudoku board
+ */
 class Board {
+
+  /**
+   * Builds a shuffled solved board
+   * @return void
+   */
   constructor() {
     this.map = Board._generateBase();
     for (let i = 0; i < SHUFFLE_TIMES; i++) {
@@ -16,6 +35,13 @@ class Board {
     }
   }
 
+  /**
+   * Returns a box based on its position on the board
+   *
+   * @param col
+   * @param line
+   * @returns int[][]
+   */
   getBox(col, line) {
     let box = [];
     let x = col * BOX_SIZE;
@@ -25,24 +51,50 @@ class Board {
     return box;
   }
 
+  /**
+   * Return all values in a line on the board
+   * @param x
+   * @returns int[]
+   */
   getLine(x) {
     return this.map.map(x => x)[x];
   }
 
+  /**
+   * Return all values of a column on the board
+   * @param y
+   * @returns int[]
+   */
   getColumn(y) {
+    const arrayColumn = (arr, n) => arr.map(x => x[n]);
     return arrayColumn(this.map, y)
   }
 
+  /**
+   * Returns the JSON representation of the board
+   * @returns string
+   */
   toJson() {
     let map = [];
     this.map.map(line => map = map.concat(line));
     return JSON.stringify(map)
   }
 
+  /**
+   * Shuffles the values in the board map
+   * @private
+   * @return void
+   */
   _shuffle() {
     this._swapLineCols();
     this._swapNumber();
   }
+
+  /**
+   * Helps the _shuffle method swapping the position of two random numbers
+   * @private
+   * @return void
+   */
   _swapNumber() {
     const numberA = Math.floor(Math.random() * BOARD_LENGTH) + 1;
     let numberB;
@@ -60,6 +112,12 @@ class Board {
       }
     }
   }
+
+  /**
+   * Helps the _shuffle method swapping the position of two random lines and two random columns
+   * @private
+   * @return void
+   */
   _swapLineCols() {
     const coordA = Math.floor(Math.random() * 3);
     let coordB;
@@ -85,12 +143,16 @@ class Board {
     this.map[finalCoordB] = aux;
   }
 
-
+  /**
+   * Generates a valid not sorted Sudoku solved board
+   *
+   * @private
+   * @returns int[][]
+   */
   static _generateBase() {
-    // firs number of the cell
+      // the first number of the cell helps the base board be a little less predictable
     let baseNumber = Math.floor(Math.random() * (BOARD_LENGTH + 1));
     let boardMap = [];
-
     for (let line = 0; line < BOARD_LENGTH; line += BOX_SIZE) {
       let initial = baseNumber;
       for (let i = line; i < line + BOX_SIZE; i++) {
@@ -105,6 +167,11 @@ class Board {
     return boardMap
   }
 
+  /**
+   * Verifies if the board is valid (repeated values in lines or cols) and if each box is also valid (no repeated numbers).
+   *
+   * @returns Error[]
+   */
   validateMap() {
     let errors = Board._errors(this.map);
     if (errors.length === 0) {
@@ -120,6 +187,13 @@ class Board {
     return errors
   }
 
+  /**
+   * Verifies if a specific box is valid (no repeated numbers).
+   *
+   * @param x
+   * @param y
+   * @returns Error|null
+   */
   validateBox(x, y) {
     const boxValues = this.getBox(x, y);
     const repeatedValues = isValidSequence(boxValues);
@@ -129,6 +203,13 @@ class Board {
     return null
   }
 
+  /**
+   * Search for repeated values in a matrix of integers and returns their coordinates if founded.
+   *
+   * @param map
+   * @return Error[]
+   * @private
+   */
   static _errors(map) {
     const arrayColumn = (arr, n) => arr.map(x => x[n]);
     let errors = [];
@@ -149,8 +230,12 @@ class Board {
   }
 }
 
-const arrayColumn = (arr, n) => arr.map(x => x[n]);
-
+/**
+ * Search for repeated values in an array of integers and returns them if founded.
+ *
+ * @param numbers
+ * @returns RegExpMatchArray
+ */
 function isValidSequence(numbers) {
   const hasRepeated = /(\b\d\b)(?=.*\b\1\b)/g;
   const seqJson = JSON.stringify(numbers);
