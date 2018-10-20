@@ -124,10 +124,10 @@ describe('Board:', function () {
       //note that there is no values repeated in the board rows and lines, but the boxes are note valid
       const invalidMap = [
         [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        [7, 8, 9, 1, 2, 3, 4, 5, 6],
-        [9, 1, 2, 3, 4, 5, 6, 7, 8],//this should be the ninth line
-        [2, 3, 4, 5, 6, 7, 8, 9, 1],
         [4, 5, 6, 7, 8, 9, 1, 2, 3],
+        [9, 1, 2, 3, 4, 5, 6, 7, 8],//this should be the ninth line
+        [7, 8, 9, 1, 2, 3, 4, 5, 6],
+        [2, 3, 4, 5, 6, 7, 8, 9, 1],
         [5, 6, 7, 8, 9, 1, 2, 3, 4],
         [8, 9, 1, 2, 3, 4, 5, 6, 7],
         [3, 4, 5, 6, 7, 8, 9, 1, 2],
@@ -138,6 +138,46 @@ describe('Board:', function () {
       mapTest.map = invalidMap;
       const errors = mapTest.validateMap();
       assert.ok(errors.length > 0);
+    });
+    it('should identify a invalid board (duplicated value in a line)', function () {
+      //note that there is no values repeated in the board rows and lines, but the boxes are note valid
+      const invalidMap = [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [4, 5, 6, 7, 8, 9, 1, 2, 3],
+        [7, 8, 9, 1, 2, 3, 4, 5, 6],
+        [2, 3, 4, 5, 6, 7, 8, 9, 1],
+        [5, 6, 7, 8, 9, 1, 2, 3, 4],
+        [8, 9, 1, 2, 3, 4, 5, 6, 7],
+        [3, 4, 5, 6, 7, 8, 9, 1, 2],
+        [6, 7, 8, 9, 1, 2, 3, 4, 5],
+        [9, 1, 2, 3, 4, 5, 6, 7, 1],//the number 1 is repeated, the last on should be 8
+      ];
+
+      let mapTest = new Board();
+      mapTest.map = invalidMap;
+      const errors = mapTest.validateMap();
+      assert.ok(errors.length > 0);
+      assert.ok(/Duplicated value at line/.test(errors[0]));
+    });
+    it('should identify a invalid board (duplicated value in a column)', function () {
+      //note that there is no values repeated in the board rows and lines, but the boxes are note valid
+      const invalidMap = [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [4, 5, 6, 7, 8, 9, 1, 2, 3],
+        [7, 8, 9, 1, 2, 3, 4, 5, 6],
+        [2, 3, 4, 5, 6, 7, 8, 9, 1],
+        [5, 6, 7, 8, 9, 1, 2, 3, 4],
+        [8, 9, 1, 2, 3, 4, 5, 6, 7],
+        [3, 4, 5, 6, 7, 8, 9, 1, 2],
+        [6, 7, 8, 9, 1, 2, 3, 4, 5],
+        [9, 8, 2, 3, 4, 5, 6, 7, 1],// the number 8 and 1 ate switched in this line
+      ];
+
+      let mapTest = new Board();
+      mapTest.map = invalidMap;
+      const errors = mapTest.validateMap();
+      assert.ok(errors.length > 0);
+      assert.ok(/Duplicated value at column/.test(errors[0]));
     });
   });
   describe('shuffle', function () {

@@ -213,13 +213,13 @@ class Board {
   static _errors(map) {
     const arrayColumn = (arr, n) => arr.map(x => x[n]);
     let errors = [];
-    map.every((line, index) => {
+    map.forEach((line, index) => {
       const repeatedValues = isValidSequence(line);
       if (repeatedValues !== null) {
         errors.push(new Error(`Duplicated value at line ${index}: ${repeatedValues}`))
       }
     });
-    map.every(function (line, index) {
+    map.forEach(function (line, index) {
       let colValues = arrayColumn(map, index);
       const repeatedValues = isValidSequence(colValues);
       if (repeatedValues !== null) {
