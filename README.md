@@ -1,4 +1,4 @@
-# Sudoku
+# Sudoku - Backend
 
 Welcome to Sudoku generator (yup, no creative names so far).
 
