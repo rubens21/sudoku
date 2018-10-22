@@ -28,10 +28,14 @@ class Board {
    * Builds a shuffled solved board
    * @return void
    */
-  constructor() {
+  constructor(positioned = {}) {
     this.map = Board._generateBase();
     for (let i = 0; i < SHUFFLE_TIMES; i++) {
       this._shuffle();
+    }
+    if(positioned.number !== undefined) {
+      const currentNumOnSpot = this.map[positioned.line][positioned.col];
+      this._swapNumber(positioned.number, currentNumOnSpot);
     }
   }
 
@@ -87,7 +91,12 @@ class Board {
    */
   _shuffle() {
     this._swapLineCols();
-    this._swapNumber();
+    const numberA = Math.floor(Math.random() * BOARD_LENGTH) + 1;
+    let numberB;
+    do {
+      numberB = Math.floor(Math.random() * BOARD_LENGTH) + 1
+    } while (numberB === numberA) ;
+    this._swapNumber(numberA, numberB);
   }
 
   /**
@@ -95,12 +104,7 @@ class Board {
    * @private
    * @return void
    */
-  _swapNumber() {
-    const numberA = Math.floor(Math.random() * BOARD_LENGTH) + 1;
-    let numberB;
-    do {
-      numberB = Math.floor(Math.random() * BOARD_LENGTH) + 1
-    } while (numberB === numberA) ;
+  _swapNumber(numberA, numberB) {
     // console.debug(`Swapping ${numberA}s by ${numberB}s`);
     for (let i = 0; i < BOARD_LENGTH; i++) {
       for (let j = 0; j < BOARD_LENGTH; j++) {

@@ -69,6 +69,20 @@ describe('Board:', function () {
         assert.ok(errors.length === 0);
       }
     });
+    it('should generate valid base boards and keep the requested number in the requested coordinate', function () {
+      for (let i = 0; i < 100; i++) {
+        const params = {
+          number: Math.floor(Math.random() * 10),
+          line: Math.floor(Math.random() * 9),
+          col: Math.floor(Math.random() * 9)
+        };
+
+        const mapTest = new Board(params);
+        const errors = mapTest.validateMap();
+        assert.ok(errors.length === 0);
+        assert.equal(mapTest.map[params.line][params.col], params.number)
+      }
+    });
   });
   describe('getBox:', function () {
     it('should get a box by coordinates', function () {
@@ -180,6 +194,7 @@ describe('Board:', function () {
       assert.ok(/Duplicated value at column/.test(errors[0]));
     });
   });
+
   describe('shuffle', function () {
     it('should keep the board valid', function () {
 
